@@ -4,21 +4,25 @@ import java.util.List;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.User;
 import com.example.demo.exception.EmailAlreadyExistException;
+import com.example.demo.exception.EmptyPasswordException;
 import com.example.demo.repository.UserRepository;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final MessageSource messageSource;
+    private final PasswordEncoder passwordEncoder;
 
 
-    public UserService(UserRepository userRepository, MessageSource messageSource) {
+    public UserService(UserRepository userRepository, MessageSource messageSource, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.messageSource = messageSource;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User saveUser(User user){
@@ -30,6 +34,16 @@ public class UserService {
             );
             throw new EmailAlreadyExistException(msg);
         }
+
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            String msg = messageSource.getMessage(
+                    "error.password.empty",
+                    null,
+                    LocaleContextHolder.getLocale()
+            );
+            throw new EmptyPasswordException(msg);
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 

@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +15,8 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+
+    @NonNull
     private String password;
 
     // Getters and Setters
