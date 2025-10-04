@@ -47,6 +47,16 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    // New method for user authentication
+    public User authenticateUser(User user){
+        User authenticator = userRepository.findByEmail(user.getEmail()).orElse(null);
+        if(authenticator !=null && passwordEncoder.matches(user.getPassword(), authenticator.getPassword())){
+            return authenticator;
+        } else{
+            return null;
+        }
+    }
+
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
@@ -54,5 +64,6 @@ public class UserService {
     public User getUserById(Long id){
         return userRepository.findById(id).orElse(null);
     }
+
 
 }

@@ -29,6 +29,16 @@ public class UserController {
         return ResponseEntity.ok(savedUser);
     }
 
+    @GetMapping("/signin")
+    public ResponseEntity<String> signInUser(@RequestBody User user){
+        User authenticatedUser = userService.authenticateUser(user);
+        if(authenticatedUser != null) {
+            return ResponseEntity.ok("User signed in successfully");
+        } else {
+            return ResponseEntity.status(401).body("Invalid credentials");
+        }
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<User>> getAllUsers(){
         List<User> users = userService.getAllUsers();
