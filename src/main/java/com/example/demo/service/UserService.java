@@ -48,13 +48,14 @@ public class UserService {
     }
 
     // New method for user authentication
-    public User authenticateUser(User user){
-        User authenticator = userRepository.findByEmail(user.getEmail()).orElse(null);
-        if(authenticator !=null && passwordEncoder.matches(user.getPassword(), authenticator.getPassword())){
-            return authenticator;
-        } else{
-            return null;
+    public User authenticateUser(String email, String password){
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return user;
+        } else {
+            return null; // Authentication failed
         }
+
     }
 
     public List<User> getAllUsers(){

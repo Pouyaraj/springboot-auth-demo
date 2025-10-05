@@ -29,9 +29,9 @@ public class UserController {
         return ResponseEntity.ok(savedUser);
     }
 
-    @GetMapping("/signin")
-    public ResponseEntity<String> signInUser(@RequestBody User user){
-        User authenticatedUser = userService.authenticateUser(user);
+    @PostMapping("/signin")
+    public ResponseEntity<String> signInUser(@RequestBody User user) {
+        User authenticatedUser = userService.authenticateUser(user.getEmail(), user.getPassword());
         if(authenticatedUser != null) {
             return ResponseEntity.ok("User signed in successfully");
         } else {
